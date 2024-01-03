@@ -1,5 +1,6 @@
 import * as model from './model.js';
 import recipeView from './views/recipeView.js';
+import searchView from './views/searchView.js';
 
 // import icons from '../img/icons.svg'; //Parcel 1
 import icons from 'url:../img/icons.svg'; //Parcel 2
@@ -34,9 +35,26 @@ const controlRecipes = async function () {
   }
 };
 
+const controlSearchResults = async function () {
+  try {
+    //1)get search query
+    const query = searchView.getQuery();
+    if (!query) return;
+
+    //2) Load search results
+    await model.loadSearchResult(query);
+
+    //3) render results
+    console.log(model.state.search);
+  } catch (err) {
+    console.error(err);
+  }
+};
+controlSearchResults();
 //init
 const init = function () {
   recipeView.addHandleRender(controlRecipes);
+  searchView.addHandlerSearch(controlSearchResults);
 };
 
 init();
