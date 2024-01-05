@@ -1,11 +1,16 @@
 import * as model from './model.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
+import resultView from './views/resultView.js';
 
 // import icons from '../img/icons.svg'; //Parcel 1
 import icons from 'url:../img/icons.svg'; //Parcel 2
 import 'core-js/stable'; //is for polyfilling everything
 import 'regenerator-runtime/runtime'; //is for polyfilling async/await
+
+if (module.hot) {
+  module.hot.accept;
+}
 
 ///////////////part of view
 // const recipeContainer = document.querySelector('.recipe');
@@ -37,6 +42,10 @@ const controlRecipes = async function () {
 
 const controlSearchResults = async function () {
   try {
+    resultView.renderSpinner();
+    //useful for checking the prototype
+    console.log(resultView);
+
     //1)get search query
     const query = searchView.getQuery();
     if (!query) return;
@@ -45,12 +54,12 @@ const controlSearchResults = async function () {
     await model.loadSearchResult(query);
 
     //3) render results
-    console.log(model.state.search);
+    resultView.render(model.state.search.results);
   } catch (err) {
     console.error(err);
   }
 };
-controlSearchResults();
+
 //init
 const init = function () {
   recipeView.addHandleRender(controlRecipes);
