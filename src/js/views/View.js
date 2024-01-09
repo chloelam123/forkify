@@ -13,6 +13,41 @@ export default class View {
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
+  update(data) {
+    if (!data || (Array.isArray(data) && data.length === 0))
+      return this.renderError();
+
+    this._data = data;
+    const newMarkup = this._generateMarkup();
+
+    //virtual saving
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    const newElements = Array.from(newDOM.querySelectorAll('*'));
+    const curElements = Array.from(this._parentElement.querySelectorAll('*'));
+
+    newElements.forEach((newEl, i) => {
+      const curEL = curElements[i];
+      // console.log(curEL, newEl.isEqualNode(curEL));
+
+      //update changed Text
+      if (
+        !newEl.isEqualNode(curEL) &&
+        newEl.firstChild?.nodeValue.trim() !== ''
+      ) {
+        console.log('🔥', newEl.firstChild.nodeValue.trim());
+        curEL.textContent = newEl.textContent;
+      }
+
+      //updates changed ATTRIButes
+      if (!newEl.isEqualNode(curEL)) {
+        // console.log(Array.from(newEl.attributes));
+        Array.from(newEl.attributes).forEach(attr =>
+          curEL.setAttribute(attr.name, attr.value)
+        );
+      }
+    });
+  }
+
   _clear() {
     //clear the message or text that already exist there before
     this._parentElement.innerHTML = '';

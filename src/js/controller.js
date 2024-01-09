@@ -29,7 +29,10 @@ const controlRecipes = async function () {
     //prevent no id scenario occurs error
     //guard clauses. modern way to handle
     if (!id) return;
-    recipeView.renderSpinner();
+    recipeView.renderSpinner(model.getSearchResultPage());
+
+    //0) Update results view to mark selected search result
+    resultView.update();
 
     //1. loading recipe
     await model.loadRecipe(id);
@@ -79,7 +82,8 @@ const controlServings = function (newServings) {
   model.updateServings(newServings);
 
   //Update the recipe view
-  recipeView.render(model.state.recipe);
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
 };
 
 //init
