@@ -14,37 +14,31 @@ export default class View {
   }
 
   update(data) {
-    if (!data || (Array.isArray(data) && data.length === 0))
-      return this.renderError();
-
     this._data = data;
     const newMarkup = this._generateMarkup();
 
-    //virtual saving
     const newDOM = document.createRange().createContextualFragment(newMarkup);
     const newElements = Array.from(newDOM.querySelectorAll('*'));
     const curElements = Array.from(this._parentElement.querySelectorAll('*'));
 
     newElements.forEach((newEl, i) => {
-      const curEL = curElements[i];
-      // console.log(curEL, newEl.isEqualNode(curEL));
+      const curEl = curElements[i];
+      // console.log(curEl, newEl.isEqualNode(curEl));
 
-      //update changed Text
+      // Updates changed TEXT
       if (
-        !newEl.isEqualNode(curEL) &&
+        !newEl.isEqualNode(curEl) &&
         newEl.firstChild?.nodeValue.trim() !== ''
       ) {
-        console.log('🔥', newEl.firstChild.nodeValue.trim());
-        curEL.textContent = newEl.textContent;
+        // console.log('💥', newEl.firstChild.nodeValue.trim());
+        curEl.textContent = newEl.textContent;
       }
 
-      //updates changed ATTRIButes
-      if (!newEl.isEqualNode(curEL)) {
-        // console.log(Array.from(newEl.attributes));
+      // Updates changed ATTRIBUES
+      if (!newEl.isEqualNode(curEl))
         Array.from(newEl.attributes).forEach(attr =>
-          curEL.setAttribute(attr.name, attr.value)
+          curEl.setAttribute(attr.name, attr.value)
         );
-      }
     });
   }
 

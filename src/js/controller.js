@@ -29,10 +29,10 @@ const controlRecipes = async function () {
     //prevent no id scenario occurs error
     //guard clauses. modern way to handle
     if (!id) return;
-    recipeView.renderSpinner(model.getSearchResultPage());
+    recipeView.renderSpinner();
 
     //0) Update results view to mark selected search result
-    resultView.update();
+    resultView.update(model.getSearchResultPage());
 
     //1. loading recipe
     await model.loadRecipe(id);
@@ -86,10 +86,19 @@ const controlServings = function (newServings) {
   recipeView.update(model.state.recipe);
 };
 
+const controlAddBookmark = function () {
+  if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
+  else model.deleteBookmark(model.state.recipe.id);
+
+  console.log(model.state.recipe);
+  recipeView.update(model.state.recipe);
+};
+
 //init
 const init = function () {
   recipeView.addHandleRender(controlRecipes);
   recipeView.addHandleUpdateServings(controlServings);
+  recipeView.addHandleBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandleClick(controlPagination);
 };
