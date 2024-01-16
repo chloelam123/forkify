@@ -28,6 +28,7 @@ export const loadRecipe = async function (id) {
       ingredients: recipe.ingredients,
     };
 
+    //Bookmark function when render every time
     if (state.bookmarks.some(bookmark => bookmark.id === id)) {
       state.recipe.bookmarked = true;
     } else state.recipe.bookmarked = false;
